@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcador do Grupo do Churrasco!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #f39c12;
+            --dark-bg: #050505;
+            --card-bg: #111111;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden; /* Evita scroll durante o modal */
+        }
+
+        /* Container Principal */
+        .container {
+            text-align: center;
+            background: linear-gradient(145deg, #151515, #0a0a0a);
+            padding: 35px 25px;
+            border-radius: 24px;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .scoreboard {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .team {
+            flex: 1;
+            background: rgba(255,255,255,0.03);
+            padding: 20px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #fff;
+            text-transform: uppercase;
+            margin-top: 0;
+            outline: none;
+            border-bottom: 1px solid #333;
+        }
+
+        .score {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        .btn-step {
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-step:active {
+            background: var(--gold);
+            color: #000;
+        }
+
+        .truco-btn {
+            margin-top: 15px;
+            width: 100%;
+            padding: 12px 0;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .sets {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* TELA DE VITÓRIA (OVERLAY) */
+        #victoryOverlay {
+            display: none; /* Escondido por padrão */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .victory-card {
+            background: #151515;
+            padding: 40px;
+            border-radius: 30px;
+            border: 3px solid var(--gold);
+            text-align: center;
+            box-shadow: 0 0 50px rgba(243, 156, 18, 0.3);
+            max-width: 80%;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .victory-msg {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+        }
+
+        .victory-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .victory-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(243, 156, 18, 0.4);
+        }
+
+        .main-controls {
+            margin-top: 30px;
+        }
+
+        .reset-btn {
+            background: none;
+            border: none;
+            color: #444;
+            text-decoration: underline;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>MARCADOR DO GRUPO DO CHURRASCO!</h1>
+        
+        <div class="scoreboard">
+            <div class="team">
+                <h2 id="teamName1" contenteditable="true">NÓS</h2>
+                <button class="btn-step" onclick="changeScore(1, 1)">+</button>
+                <div class="score" id="score1">0</div>
+                <button class="btn-step" onclick="changeScore(1, -1)">-</button>
+                <div class="sets">Vitorias: <span id="wins1">0</span></div>
+                <button id="truco1" class="truco-btn" onclick="handleTruco(1)">TRUCO!</button>
+            </div>
+
+            <div class="team">
+                <h2 id="teamName2" contenteditable="true">ELES</h2>
+                <button class="btn-step" onclick="changeScore(2, 1)">+</button>
+                <div class="score" id="score2">0</div>
+                <button class="btn-step" onclick="changeScore(2, -1)">-</button>
+                <div class="sets">Vitorias: <span id="wins2">0</span></div>
+                <button id="truco2" class="truco-btn" onclick="handleTruco(2)">TRUCO!</button>
+            </div>
+        </div>
+
+        <div class="main-controls">
+            <button class="reset-btn" onclick="resetGame()">Zerar Partida</button>
+            <button class="reset-btn" onclick="resetAll()">Zerar Tudo</button>
+        </div>
+    </div>
+
+    <div id="victoryOverlay">
+        <div class="victory-card">
+            <div id="victoryText" class="victory-msg">NÓS MOERAM ESSA!</div>
+            <button class="victory-btn" onclick="closeVictory()">PRÓXIMA PELEIA ➔</button>
+        </div>
+    </div>
+
+    <script>
+        const trucoLabels = ["TRUCO!", "SEIS!!!!!", "NOVE!!!!!!", "DOZE!!!!!!!"];
+        let state = {
+            team1: { score: 0, wins: 0, labelIndex: 0 },
+            team2: { score: 0, wins: 0, labelIndex: 0 }
+        };
+
+        function changeScore(teamNum, amount) {
+            const team = state[`team${teamNum}`];
+            team.score = Math.max(0, team.score + amount);
+            checkWinner(teamNum);
+            updateDisplay();
+        }
+
+        function handleTruco(teamNum) {
+            const team = state[`team${teamNum}`];
+            team.score += 3;
+            team.labelIndex = (team.labelIndex + 1) % trucoLabels.length;
+            checkWinner(teamNum);
+            updateDisplay();
+        }
+
+        function checkWinner(teamNum) {
+            const team = state[`team${teamNum}`];
+            if (team.score >= 12) {
+                team.wins++;
+                showVictory(teamNum);
+            }
+        }
+
+        function showVictory(teamNum) {
+            const teamName = document.getElementById(`teamName${teamNum}`).innerText.trim();
+            const phrases = [
+                `${teamName} MOERAM ESSA!`,
+                `${teamName} AFOFARAM!`,
+                `${teamName} DERAM SHOW!`,
+                `${teamName} MANDARAM BRASA!`,
+                `${teamName} SÃO OS MESTRES!`,
+                `${teamName} HUMILHARAM!`
+            ];
+            
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+            document.getElementById('victoryText').innerText = randomPhrase;
+            document.getElementById('victoryOverlay').style.display = 'flex';
+        }
+
+        function closeVictory() {
+            document.getElementById('victoryOverlay').style.display = 'none';
+            resetGame();
+        }
+
+        function updateDisplay() {
+            document.getElementById('score1').innerText = state.team1.score;
+            document.getElementById('score2').innerText = state.team2.score;
+            document.getElementById('wins1').innerText = state.team1.wins;
+            document.getElementById('wins2').innerText = state.team2.wins;
+            document.getElementById('truco1').innerText = trucoLabels[state.team1.labelIndex];
+            document.getElementById('truco2').innerText = trucoLabels[state.team2.labelIndex];
+        }
+
+        function resetGame() {
+            state.team1.score = 0;
+            state.team2.score = 0;
+            state.team1.labelIndex = 0;
+            state.team2.labelIndex = 0;
+            updateDisplay();
+        }
+
+        function resetAll() {
+            state.team1.wins = 0;
+            state.team2.wins = 0;
+            resetGame();
+        }
+    </script>
+</body>
+</html>
