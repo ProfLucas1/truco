@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marcador do Grupo do Churrasco!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --gold: #f39c12;
@@ -13,7 +15,14 @@
         }
 
         body {
-            background-color: var(--dark-bg);
+            /* Troque 'foto_grupo.jpg' pelo nome exato do seu arquivo na pasta */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('logo churrasco.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* A foto fica parada enquanto o resto se move */
+            background-repeat: no-repeat;
+
             color: #e0e0e0;
             font-family: 'Poppins', sans-serif;
             display: flex;
@@ -21,21 +30,31 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden; /* Evita scroll durante o modal */
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         /* Container Principal */
         .container {
             text-align: center;
-            background: linear-gradient(145deg, #151515, #0a0a0a);
+            /* Aplica a foto também no marcador, mas com um fundo preto por cima para não atrapalhar a leitura */
+            background-image: linear-gradient(rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.85)), url('foto_grupo.jpg');
+            background-size: cover;
+            background-position: center;
+
             padding: 35px 25px;
             border-radius: 24px;
-            border: 1px solid #2a2a2a;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
             width: 100%;
             max-width: 420px;
             position: relative;
             z-index: 1;
+
+            /* Efeito de vidro (Glassmorphism) */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         h1 {
@@ -54,10 +73,11 @@
 
         .team {
             flex: 1;
-            background: rgba(255,255,255,0.03);
+            background: rgba(0, 0, 0, 0.4);
+            /* Preto bem transparente */
             padding: 20px 10px;
             border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         h2 {
@@ -114,7 +134,8 @@
 
         /* TELA DE VITÓRIA (OVERLAY) */
         #victoryOverlay {
-            display: none; /* Escondido por padrão */
+            display: none;
+            /* Escondido por padrão */
             position: fixed;
             top: 0;
             left: 0;
@@ -140,8 +161,15 @@
         }
 
         @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .victory-msg {
@@ -186,11 +214,12 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="container">
         <h1>MARCADOR DO GRUPO DO CHURRASCO!</h1>
-        
+
         <div class="scoreboard">
             <div class="team">
                 <h2 id="teamName1" contenteditable="true">NÓS</h2>
@@ -264,7 +293,7 @@
                 `${teamName} SÃO OS MESTRES!`,
                 `${teamName} HUMILHARAM!`
             ];
-            
+
             const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
             document.getElementById('victoryText').innerText = randomPhrase;
             document.getElementById('victoryOverlay').style.display = 'flex';
@@ -299,4 +328,5 @@
         }
     </script>
 </body>
+
 </html>
