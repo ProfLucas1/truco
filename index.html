@@ -256,8 +256,9 @@
     <script>
         const trucoLabels = ["TRUCO!", "SEIS!!!!!", "NOVE!!!!!!", "DOZE!!!!!!!"];
         let state = {
-            team1: { score: 0, wins: 0, labelIndex: 0 },
-            team2: { score: 0, wins: 0, labelIndex: 0 }
+            // Adicionado "timeoutId" para controlar o tempo do botão
+            team1: { score: 0, wins: 0, labelIndex: 0, timeoutId: null },
+            team2: { score: 0, wins: 0, labelIndex: 0, timeoutId: null }
         };
 
         function changeScore(teamNum, amount) {
@@ -270,9 +271,22 @@
         function handleTruco(teamNum) {
             const team = state[`team${teamNum}`];
             team.score += 3;
+            
+            // Avança para o próximo grito de Truco
             team.labelIndex = (team.labelIndex + 1) % trucoLabels.length;
             checkWinner(teamNum);
             updateDisplay();
+
+            // Se já tiver um tempo rodando, cancela para não atropelar os cliques rápidos
+            if (team.timeoutId) {
+                clearTimeout(team.timeoutId);
+            }
+
+            // Agenda a volta para a posição 0 ("TRUCO!") após 2 segundos
+            team.timeoutId = setTimeout(() => {
+                team.labelIndex = 0;
+                updateDisplay();
+            }, 2000); // 2000 = 2 segundos. Pode alterar esse valor como preferir!
         }
 
         function checkWinner(teamNum) {
@@ -318,6 +332,11 @@
             state.team2.score = 0;
             state.team1.labelIndex = 0;
             state.team2.labelIndex = 0;
+            
+            // Limpa os tempos se o jogo for resetado enquanto o botão estava mudado
+            clearTimeout(state.team1.timeoutId);
+            clearTimeout(state.team2.timeoutId);
+            
             updateDisplay();
         }
 
